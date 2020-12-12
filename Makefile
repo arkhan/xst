@@ -4,7 +4,7 @@
 
 include config.mk
 
-SRC = st.c x.c boxdraw.c
+SRC = st.c x.c boxdraw.c hb.c
 OBJ = $(SRC:.c=.o)
 
 all: options st
@@ -22,7 +22,8 @@ config.h:
 	$(CC) $(STCFLAGS) -c $<
 
 st.o: config.h st.h win.h
-x.o: arg.h config.h st.h win.h
+x.o: arg.h config.h st.h win.h hb.h
+hb.o: st.h
 boxdraw.o: config.h st.h boxdraw_data.h
 
 $(OBJ): config.h config.mk
@@ -48,11 +49,18 @@ install: st
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
 	sed "s/VERSION/$(VERSION)/g" < st.1 > $(DESTDIR)$(MANPREFIX)/man1/xst.1
 	chmod 644 $(DESTDIR)$(MANPREFIX)/man1/xst.1
-	tic -sx st.info
-	@echo Please see the README file regarding the terminfo entry of st.
+	mkdir -p $(DESTDIR)$(PREFIX)/share/terminfo
+	env TERMINFO=$(DESTDIR)$(PREFIX)/share/terminfo tic -sx st.info
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/xst
 	rm -f $(DESTDIR)$(MANPREFIX)/man1/xst.1
+	rm -f $(DESTDIR)$(PREFIX)/share/terminfo/x/xst
+	rm -f $(DESTDIR)$(PREFIX)/share/terminfo/x/xst-256color
+	rm -f $(DESTDIR)$(PREFIX)/share/terminfo/x/xst-bs
+	rm -f $(DESTDIR)$(PREFIX)/share/terminfo/x/xst-bs-256color
+	rm -f $(DESTDIR)$(PREFIX)/share/terminfo/x/xst-meta
+	rm -f $(DESTDIR)$(PREFIX)/share/terminfo/x/xst-meta-256color
+	rm -f $(DESTDIR)$(PREFIX)/share/terminfo/x/xst-mono
 
 .PHONY: all options clean dist install uninstall

@@ -1078,7 +1078,7 @@ kscrolldown(const Arg* a)
 {
 	int n = a->i;
 
-	if (scrollrate)
+	if (scrollrate && (n==1))
 		n = scrollrate;
 
 	if (n < 0)
@@ -1099,7 +1099,7 @@ kscrollup(const Arg* a)
 {
 	int n = a->i;
 
-	if (scrollrate)
+	if (scrollrate && (n==1))
 		n = scrollrate;
 
 	if (n < 0)
@@ -1929,7 +1929,15 @@ strhandle(void)
 	case ']': /* OSC -- Operating System Command */
 		switch (par) {
 		case 0:
+			if (narg > 1) {
+				xsettitle(strescseq.args[1]);
+				xseticontitle(strescseq.args[1]);
+			}
+			return;
 		case 1:
+			if (narg > 1)
+				xseticontitle(strescseq.args[1]);
+			return;
 		case 2:
 			if (narg > 1)
 				xsettitle(strescseq.args[1]);
@@ -2719,7 +2727,8 @@ draw(void)
 	drawregion(0, 0, term.col, term.row);
 	if (term.scr == 0)
 		xdrawcursor(cx, term.c.y, term.line[term.c.y][cx],
-				term.ocx, term.ocy, term.line[term.ocy][term.ocx]);
+			    term.ocx, term.ocy, term.line[term.ocy][term.ocx],
+			    term.line[term.ocy], term.col);
 	term.ocx = cx;
 	term.ocy = term.c.y;
 	xfinishdraw();
