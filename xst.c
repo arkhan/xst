@@ -78,6 +78,7 @@ xrdb_load(void)
 		}
 
 		XRESOURCE_LOAD_STRING("font", font);
+		XRESOURCE_LOAD_STRING("fontalt0", font2);
 		XRESOURCE_LOAD_STRING("termname", termname);
 
 		XRESOURCE_LOAD_INTEGER("blinktimeout", blinktimeout);
@@ -166,4 +167,3 @@ removewindecorations(void)
 	XChangeProperty(xw.dpy, xw.win, mwm_hints_property, mwm_hints_property, 32, PropModeReplace,
 			(uchar *)&hints, 5);
 }
-
